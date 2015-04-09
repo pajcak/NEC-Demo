@@ -1,0 +1,18 @@
+#include <string>
+
+
+#ifndef AddMonitor_H
+#define	AddMonitor_H
+
+class AddMonitor {
+public:
+    AddMonitor();
+    virtual ~AddMonitor();
+    void showMenu(void);
+private:
+    WINDOW * m_window;
+    static const std::string m_AddMonitorText []; 
+};
+
+#endif	/* AddMonitor_H */
+
