@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 //    return 0;
 //    endwin();
     
-    system("resize -s 30 80");
+    system("resize -s 26 80");
     Demo * demo = new Demo();
     demo->startMenu();
     delete demo;

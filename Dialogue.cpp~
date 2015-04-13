@@ -1,5 +1,6 @@
 #include "Dialogue.h"
 #include "Colours.h"
+#include <iomanip>
 #include <sstream>
 
 using namespace std;
@@ -13,6 +14,24 @@ Dialogue::Dialogue(const string & title, const int & X, const int & Y, map<int, 
     
     m_Cols = 25;
     m_Lines = m_monitors.size() + 4;
+    m_DialogueWindow = newwin(m_Lines, m_Cols, m_Y, m_X);
+    m_isWarning = false;
+}
+Dialogue::Dialogue(const string & title, const int & X, const int & Y, vector<pair<string, bool>> * options) 
+: m_Options(options)
+{
+    m_isConstant = false;
+    m_Title = title;
+    m_X = X;
+    m_Y = Y;
+    int longestStr = m_Title.length();
+    for (vector<pair<string,bool>>::const_iterator it = m_Options->begin();
+            it != m_Options->end();
+            ++it) {
+        if ((int)it->first.length() > longestStr) longestStr = (int)it->first.length();
+    }
+    m_Cols = longestStr + 4;
+    m_Lines = m_Options->size() + 5;
     m_DialogueWindow = newwin(m_Lines, m_Cols, m_Y, m_X);
     m_isWarning = false;
 }
@@ -68,7 +87,7 @@ int Dialogue::showMonitorDialogue() {
         }
         printUpdatedMonitorDialogue(selected, selectedMonitorID);
         key = wgetch(m_DialogueWindow);
-		if (key == 27) return "";
+		if (key == 27) return -1;
     }
     
     keypad(m_DialogueWindow, FALSE);
@@ -99,6 +118,30 @@ string Dialogue::showAddMonitorDialogue() {
 	}
     keypad(m_DialogueWindow, FALSE);
 return result;
+}
+vector<pair<string, bool> >* Dialogue::showOptionsDialogue() {
+	int selected = 0;
+	printUpdatedOptionsDialogue(selected, 0);
+	keypad(m_DialogueWindow, TRUE);
+	int key = 0;
+	while (true) {
+    	if (key == 27) return m_Options;
+        if (key == KEY_UP) {
+            if (selected == 0) selected = m_Options->size();
+            else selected--;
+        }
+        if (key == KEY_DOWN) {
+            if (selected == (int)m_Options->size()) selected = 0;
+            else selected++;
+        }
+        if (key == ' ' || key == KEY_ENTER || key == '\n') {
+        	if (selected == (int)m_Options->size()) return m_Options;
+        	printUpdatedOptionsDialogue(selected, 1);
+        } else printUpdatedOptionsDialogue(selected, 0);
+        key = wgetch(m_DialogueWindow);
+    }
+    keypad(m_DialogueWindow, FALSE);
+return m_Options;
 }
 
 int Dialogue::showDialogue()
@@ -191,6 +234,40 @@ void Dialogue::printUpdatedMonitorDialogue(const int & selected, int & monitorID
         } else mvwprintw(m_DialogueWindow, i + 3, 2, "%s", ss.str().c_str());
         i++;
     }
+    wrefresh(m_DialogueWindow);
+}
+
+void Dialogue::printUpdatedOptionsDialogue(const int & selected, bool changeNeeded) {
+    box(m_DialogueWindow, '|', '-');
+    wattron(m_DialogueWindow, COLOR_PAIR(RED));
+    wattron(m_DialogueWindow, A_UNDERLINE);
+    wattron(m_DialogueWindow, A_BOLD);
+    mvwprintw(m_DialogueWindow, 1, (m_Cols / 2) - m_Title.length() / 2, "%s", m_Title.c_str());
+    wattroff(m_DialogueWindow, A_BOLD);
+    wattroff(m_DialogueWindow, A_UNDERLINE);
+    wattroff(m_DialogueWindow, COLOR_PAIR(RED));
+    
+    int i = 0;
+    
+    for (vector<pair<string,bool>>::iterator it = m_Options->begin();
+    		it != m_Options->end(); ++it)
+    {
+    	ostringstream ss;
+    	if (changeNeeded) it->second = !it->second;
+    	ss << it->first << setfill('.') << setw(10) << (it->second == true ? "YES" : "NO");
+        if (i == selected) {
+            wattron(m_DialogueWindow, COLOR_PAIR(GREEN));
+            mvwprintw(m_DialogueWindow, i + 3, 2, "%s", ss.str().c_str());
+            wattroff(m_DialogueWindow, COLOR_PAIR(GREEN));
+        } else mvwprintw(m_DialogueWindow, i + 3, 2, "%s", ss.str().c_str());
+        i++;
+    }
+    if (i == selected) {
+        wattron(m_DialogueWindow, COLOR_PAIR(GREEN));
+        mvwprintw(m_DialogueWindow, i + 3, 2, "%s", "EXIT");
+        wattroff(m_DialogueWindow, COLOR_PAIR(GREEN));
+    } else mvwprintw(m_DialogueWindow, i + 3, 2, "%s", "EXIT");
+        
     wrefresh(m_DialogueWindow);
 }
 

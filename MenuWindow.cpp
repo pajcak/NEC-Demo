@@ -23,8 +23,9 @@ MenuWindow::MenuWindow()
     m_MenuStrings.push_back(pair<string, bool>("GET PARAMETER", true));
     m_MenuStrings.push_back(pair<string, bool>("SET PARAMETER", true));
     m_MenuStrings.push_back(pair<string, bool>("COMMAND", true));
+    m_MenuStrings.push_back(pair<string, bool>("OPTIONS", true));
     m_MenuStrings.push_back(pair<string, bool>("EXIT", true));
-    m_MenuWindow = newwin(16, 22, LINES / 2 - 4, COLS / 2 - 10);
+    m_MenuWindow = newwin(18, 22, LINES / 2 - 5, COLS / 2 - 10);
     m_Window = newwin(LINES, COLS, 0, 0);
     box(m_MenuWindow, '|', '-');
     box(m_Window, '|', '-');
@@ -65,7 +66,7 @@ void MenuWindow::printMenu(const int & selected)
  	int y = 2;
     for (int i = 0; i < (int) m_MenuStrings.size(); i++) {
         y ++;
-        if (y == 10) {mvwprintw(m_MenuWindow, y, 2, "%s", ""); y++;}    
+        if (y == 10 || y == 14) {mvwprintw(m_MenuWindow, y, 2, "%s", ""); y++;}    
         if (!m_MenuStrings[i].second) {
 //            wattron(m_MenuWindow, COLOR_PAIR(BLACK))	;
             wattron(m_MenuWindow, A_INVIS);

@@ -20,6 +20,7 @@ private:
     MenuWindow * m_MenuWindow;
     map<string, void(*)> m_Parameters;
     map<int, pair<string, int>> m_monitors;
+    vector<pair<string,bool>> m_options;
 };
 
 #endif	/* Demo_H */

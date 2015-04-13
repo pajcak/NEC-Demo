@@ -1,13 +1,12 @@
 #include <unistd.h>
 #include <sstream>
 #include <fstream>
-
+#include <cstdio>
 #include "Demo.h"
 #include "Dialogue.h"
 
 Demo::Demo()
 {
-	m_controller = new CController();
     initscr();
     cbreak();
     noecho();
@@ -24,13 +23,25 @@ Demo::Demo()
     init_pair(6, COLOR_WHITE, COLOR_BLACK);
     init_pair(7, COLOR_YELLOW, COLOR_BLACK);
 	
+	
+	m_controller = new CController();
+	m_controller->initController();
+	
+	m_controller->addMonitor("127.0.0.1", 12345, 1);
+	m_monitors[1] = std::make_pair("127.0.0.1", 12345);
+
+	
 	initParams();
+	m_options.push_back(std::make_pair("Paralelism enabled", false));
+			
 
     m_MenuWindow = new MenuWindow();
+    
 }
 
 Demo::~Demo()
 {
+	m_controller->destroyController();
 	delete m_controller;
     delete m_MenuWindow;
     keypad(stdscr, FALSE);
@@ -93,8 +104,12 @@ start:
 				goto start;
 			}
 			m_monitors[monitorID] = std::make_pair(addr, port);
-			
 			addDialogue.hideDialogue();
+			
+			stringstream ss; ss << "Add monitor: " << monitorID; 
+			Dialogue dialS(ss.str().c_str(), "Monitor successfully added!", 25, 11);
+		    dialS.showDialogue();
+		    
 		    touchwin(stdscr);
 		    refresh();
 			
@@ -105,19 +120,23 @@ start:
 		{
 		    m_MenuWindow->hideMenu();
 		    Dialogue dial("Delete monitor", 25, 10, m_monitors);
-		    int res = dial.showMonitorDialogue();
-		    if (m_monitors.find(res) != m_monitors.end()) {
-		    	m_monitors.erase(res);
+		    int monitID = dial.showMonitorDialogue();
+		    if (m_monitors.find(monitID) != m_monitors.end()) {
+		    	m_monitors.erase(monitID);
 		    	try {
-		    		m_controller->deleteMonitor(res);
+		    		m_controller->deleteMonitor(monitID);
 		    	} catch ( char const* s) {
 		    		Dialogue dialE("ERROR", s, 25, 10);
 		    		dialE.setWarningColor();
 		    		dialE.showDialogue();
 		    		goto start;
 		    	}
+		    	stringstream ss; ss << "Delete monitor: " << monitID; 
+				Dialogue dialS(ss.str().c_str(), "Monitor successfully deleted!", 25, 11);
+		    	dialS.showDialogue();
 		    }
 		    dial.hideDialogue();
+		    
 		    touchwin(stdscr);
 		    refresh();
 			
@@ -128,20 +147,24 @@ start:
 		{
 		    m_MenuWindow->hideMenu();
 		    Dialogue dial("Connect monitor", 25, 10, m_monitors);
-		    int res = dial.showMonitorDialogue();
-		    if (m_monitors.find(res) != m_monitors.end()) {
+		    int monitID = dial.showMonitorDialogue();
+		    bool res;
+		    if (m_monitors.find(monitID) != m_monitors.end()) {
 		    	try {
-		    		m_controller->connectMonitor(res);
+		    		res = m_controller->connectMonitor(monitID);
 		    	} catch ( char const* s) {
 		    		Dialogue dialE("ERROR", s, 25, 10);
 		    		dialE.setWarningColor();
 		    		dialE.showDialogue();
 		    		goto start;
 		    	}
-		    	Dialogue dialS("Connect monitor", "Connection established!", 25, 10);
-		    	dialS.showDialogue();
 		    }
 		    dial.hideDialogue();
+		    stringstream ss; ss << "Connect monitor: " << monitID;
+		    Dialogue dialS(ss.str().c_str(), res ?
+		    			"Monitor successfully connected!" : "Monitor could not connect!", 25, 11);
+		    dialS.showDialogue();
+		    
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -151,10 +174,10 @@ start:
 		{
 		    m_MenuWindow->hideMenu();
 		    Dialogue dial("Disconnect monitor", 25, 10, m_monitors);
-		    int res = dial.showMonitorDialogue();
-		    if (m_monitors.find(res) != m_monitors.end()) {
+		    int monitID = dial.showMonitorDialogue();
+		    if (m_monitors.find(monitID) != m_monitors.end()) {
 		    	try {
-		    		m_controller->disconnectMonitor(res);
+		    		m_controller->disconnectMonitor(monitID);
 		    	} catch ( char const* s) {
 		    		Dialogue dialE("ERROR", s, 25, 10);
 		    		dialE.setWarningColor();
@@ -163,6 +186,9 @@ start:
 		    	}
 		    }
 		    dial.hideDialogue();
+		    stringstream ss; ss << "Disconnect monitor: " << monitID;
+		    Dialogue dialS(ss.str().c_str(), "Monitor successfully disconnected!", 25, 11);
+		    dialS.showDialogue();
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -171,23 +197,64 @@ start:
 		case 4: //CONNECT ALL
 		{
 		    m_MenuWindow->hideMenu();
-		    
+		    bool res;
+		    try {
+		    	res = m_controller->connectAll();
+		    } catch ( char const* s) {
+		    	Dialogue dialE("ERROR", s, 25, 10);
+		    	dialE.setWarningColor();
+		    	dialE.showDialogue();
+		    	goto start;
+		    }
+		    Dialogue dial("Connect all", res ?
+		    			"All monitors successfully connected!" : "Some of monitors could not connect!", 25, 11);
+		    dial.showDialogue();
 		    touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 5: //DISCONNECT ALL
 		{
 		    m_MenuWindow->hideMenu();
+		    try {
+		    	m_controller->disconnectAll();
+		    } catch ( char const* s) {
+		    	Dialogue dialE("ERROR", s, 25, 10);
+		    	dialE.setWarningColor();
+		    	dialE.showDialogue();
+		    	goto start;
+		    }
+		    Dialogue dial("Disconnect all", "All monitors successfully disconnected!", 25, 11);
+		    dial.showDialogue();
 		    touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 6: //IS CONNECTED
 		{
 		    m_MenuWindow->hideMenu();
+		    Dialogue dial("Is connected", 25, 10, m_monitors);
+		    int res = dial.showMonitorDialogue();
+		    bool b;
+		    if (m_monitors.find(res) != m_monitors.end()) {
+		    	try {
+		    		b = m_controller->isConnected(res);
+		    	} catch ( char const* s) {
+		    		Dialogue dialE("ERROR", s, 25, 10);
+		    		dialE.setWarningColor();
+		    		dialE.showDialogue();
+		    		goto start;
+		    	}
+		    	stringstream ss; ss << "Monitor: " << res;
+		    	Dialogue dialSucc(ss.str().c_str(), b ? "Monitor is connected!" : "Monitor is disconnected!", 25, 10);
+		    	dialSucc.showDialogue();
+		    }
+		    dial.hideDialogue();
 		    touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 7: //GET PARAM
@@ -211,11 +278,21 @@ start:
 		    refresh();
 		    break;
 		}
+		case 10: //OPTIONS
+		{
+		    m_MenuWindow->hideMenu();
+		    
+			Dialogue d("OPTIONS (press SPACE to enable or disable)", 25, 11, &m_options);
+			m_options = *d.showOptionsDialogue();
+			
+		    touchwin(stdscr);
+		    refresh();
+		    goto start;
+		    break;
+		}
 		default: 
 		{
 		    m_MenuWindow->hideMenu();
-		    touchwin(stdscr);
-		    refresh();
 		    break;
 		}
     }
