@@ -1,7 +1,7 @@
 #DIR=../NEC-Controller
 CC=g++
 CFLAGS=-c -std=c++11 -Wall -pedantic -Wno-long-long -O0 -ggdb
-LDFLAGS=-lncurses
+LDFLAGS=-lncurses -lpthread
 
 SOURCES=$(wildcard *.cpp) $(wildcard ../NEC-Controller/*.cpp)
 SOURCES:=$(filter-out ../NEC-Controller/main.cpp, $(SOURCES))

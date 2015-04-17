@@ -14,18 +14,18 @@ public:
     Dialogue(const string & title, const int & X, const int & Y, map<int, pair<string, int>> & monitors);
     Dialogue(const string & title, const string & text, const int & X, const int & Y);
     virtual ~Dialogue();
-    int showDialogue();
-    int showMonitorDialogue();
-    string showAddMonitorDialogue();
-    vector<pair<string, bool> > * showOptionsDialogue();
-    void hideDialogue();
-    void setWarningColor();
+    
+    int 							showDialogue(bool isConstant, bool isWarning);
+    vector<pair<int, bool>> 		showMonitorDialogue();
+    string 							showAddMonitorDialogue();
+    int 							showGetNumberDialogue();
+    vector<pair<string, bool> > * 	showOptionsDialogue();
+    void 							hideDialogue();
 private:
-    void showConstantDialogue();
-    void printUpdatedDialogue(const int & selected);
+    void printUpdatedDialogue(const int & selected, bool isWarning);
     void printUpdatedOptionsDialogue(const int & selected, bool changeNeeded);
-    void printUpdatedMonitorDialogue(const int & selected, int & monitorID);
-    bool m_isConstant;
+    void printUpdatedMonitorDialogue(const int & selected,
+                                    	vector<pair<int, bool>> & monitorsSelection);
     int m_Lines, m_Cols;
     int m_X;
     int m_Y;
@@ -34,9 +34,8 @@ private:
     vector<string> m_Strings;
     vector<pair<string, bool>> * m_Options;
     
-    string m_Title, m_Text;
+    string m_Title;
     WINDOW * m_DialogueWindow;
-    bool m_isWarning;
 };
 
 #endif	/* DIALOGUE_H */

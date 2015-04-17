@@ -27,11 +27,8 @@ Demo::Demo()
 	m_controller = new CController();
 	m_controller->initController();
 	
-	m_controller->addMonitor("127.0.0.1", 12345, 1);
-	m_monitors[1] = std::make_pair("127.0.0.1", 12345);
-
-	
-	initParams();
+	initMonitors();
+	initFunctions();
 	m_options.push_back(std::make_pair("Paralelism enabled", false));
 			
 
@@ -47,23 +44,110 @@ Demo::~Demo()
     keypad(stdscr, FALSE);
     endwin();
 }
+void Demo::initMonitors() {
+	m_controller->addMonitor("127.0.0.1", 12345, 666);
+	m_monitors[666] = std::make_pair("127.0.0.1", 12345);
+	m_controller->addMonitor("127.0.0.1", 12346, 777);
+	m_monitors[777] = std::make_pair("127.0.0.1", 12346);
+	m_controller->addMonitor("10.0.0.100", 7142, 1);
+	m_monitors[1] = std::make_pair("10.0.0.100", 7142);
+	m_controller->addMonitor("10.0.0.101", 7142, 2);
+	m_monitors[2] = std::make_pair("10.0.0.101", 7142);
+	m_controller->addMonitor("10.0.0.102", 7142, 3);
+	m_monitors[3] = std::make_pair("10.0.0.102", 7142);
+	m_controller->addMonitor("10.0.0.103", 7142, 4);
+	m_monitors[4] = std::make_pair("10.0.0.103", 7142);
+	m_controller->addMonitor("10.0.0.104", 7142, 5);
+	m_monitors[5] = std::make_pair("10.0.0.104", 7142);
+	m_controller->addMonitor("10.0.0.105", 7142, 6);
+	m_monitors[6] = std::make_pair("10.0.0.105", 7142);
+	m_controller->addMonitor("10.0.0.106", 7142, 7);
+	m_monitors[7] = std::make_pair("10.0.0.106", 7142);
+	m_controller->addMonitor("10.0.0.107", 7142, 8);
+	m_monitors[8] = std::make_pair("10.0.0.107", 7142);
+	m_controller->addMonitor("10.0.0.108", 7142, 9);
+	m_monitors[9] = std::make_pair("10.0.0.108", 7142);
+	m_controller->addMonitor("10.0.0.109", 7142, 10);
+	m_monitors[10] = std::make_pair("10.0.0.109", 7142);
+	m_controller->addMonitor("10.0.0.110", 7142, 11);
+	m_monitors[11] = std::make_pair("10.0.0.110", 7142);
+	m_controller->addMonitor("10.0.0.111", 7142, 12);
+	m_monitors[12] = std::make_pair("10.0.0.111", 7142);
+	m_controller->addMonitor("10.0.0.112", 7142, 13);
+	m_monitors[13] = std::make_pair("10.0.0.112", 7142);
+	m_controller->addMonitor("10.0.0.113", 7142, 14);
+	m_monitors[14] = std::make_pair("10.0.0.113", 7142);
+	m_controller->addMonitor("10.0.0.114", 7142, 15);
+	m_monitors[15] = std::make_pair("10.0.0.114", 7142);
+	m_controller->addMonitor("10.0.0.115", 7142, 16);
+	m_monitors[16] = std::make_pair("10.0.0.115", 7142);
+	m_controller->addMonitor("10.0.0.116", 7142, 17);
+	m_monitors[17] = std::make_pair("10.0.0.116", 7142);
+	m_controller->addMonitor("10.0.0.117", 7142, 18);
+	m_monitors[18] = std::make_pair("10.0.0.117", 7142);
+	m_controller->addMonitor("10.0.0.118", 7142, 19);
+	m_monitors[19] = std::make_pair("10.0.0.118", 7142);
+	m_controller->addMonitor("10.0.0.119", 7142, 20);
+	m_monitors[20] = std::make_pair("10.0.0.119", 7142);
+}
     
-void Demo::initParams() {
-//	m_Parameters["Backlight"] = ;
-//	m_Parameters["Contrast"] = ;
-//	m_Parameters["Sharpness"] = ;
-//	m_Parameters["Brightness"] = ;
-//	m_Parameters["Hue"] = ;
-//	m_Parameters["Color paleness"] = ;
-//	m_Parameters["Color temeprature"] = ;
-//	m_Parameters["Color control"] = ;
-//	m_Parameters["Gamma correction"] = ;
-//	m_Parameters["Volume"] = ;
+void Demo::initFunctions() {
+	//----------functions-------
+    m_initController    =  &CController::initController;
+    m_destroyController =  &CController::destroyController;
+    m_addMonitor        =  &CController::addMonitor;
+    m_deleteMonitor     =  &CController::deleteMonitor;
+    m_connectMonitor    =  &CController::connectMonitor;
+    m_disconnectMonitor =  &CController::disconnectMonitor;
+    m_connectAll        =  &CController::connectAll;
+    m_disconnectAll     =  &CController::disconnectAll;
+    m_isConnected       =  &CController::isConnected;
+	//------param-functions-----
+	m_FunctionNames.push_back("Backlight");
+	m_GetBacklightFunc = &CController::getBacklight;
+	m_SetBacklightFunc = &CController::setBacklight;
+
+	m_FunctionNames.push_back("Contrast");
+	m_GetContrastFunc = &CController::getContrast;
+	m_SetContrastFunc = &CController::setContrast;
+
+	m_FunctionNames.push_back("Sharpness");
+	m_GetSharpnessFunc = &CController::getSharpness;
+	m_SetSharpnessFunc = &CController::setSharpness;
+
+	m_FunctionNames.push_back("Brightness");
+	m_GetBrightnessFunc = &CController::getBrightness;
+	m_SetBrightnessFunc = &CController::setBrightness;
+
+	m_FunctionNames.push_back("Hue");
+	m_GetHueFunc = &CController::getHue;
+	m_SetHueFunc = &CController::setHue;
+
+	m_FunctionNames.push_back("Paleness");
+	m_GetPalenessFunc = &CController::getPaleness;
+	m_SetPalenessFunc = &CController::setPaleness;
+
+	m_FunctionNames.push_back("Color temperature");
+	m_GetColorTemperatureFunc = &CController::getColorTemperature;
+	m_SetColorTemperatureFunc = &CController::setColorTemperature;
+
+	m_FunctionNames.push_back("Gamma correction");
+	m_GetGammaCorrectionFunc = &CController::getGammaCorrection;
+	m_SetGammaCorrectionFunc = &CController::setGammaCorrection;
+
+	m_FunctionNames.push_back("Volume");
+	m_GetVolumeFunc = &CController::getVolume;
+	m_SetVolumeFunc = &CController::setVolume;
+	//------command-functions-----
+	m_CommandNames.push_back("Read power status");
+    m_PowerStatusReadFunc = &CController::powerStatusRead;
+	m_CommandNames.push_back("Change power status");
+    m_PowerControlFunc = &CController::powerControl;
 }
 
-bool Demo::findDuplicate(int id, string addr) const {
+bool Demo::findDuplicate(int id, string addr, int port) const {
 	for (map<int, pair<string, int>>::const_iterator it = m_monitors.begin(); it != m_monitors.end(); ++it) {
-		if (it->first == id || it->second.first == addr) return true;
+		if (it->first == id || (it->second.first == addr && it->second.second == port)) return true;
 	}
 	return false;
 }
@@ -71,6 +155,8 @@ void Demo::startMenu(void)
 {
 start:
     int choice = m_MenuWindow->showMenu();
+    int monitorDialogue_X = 18;
+    int monitorDialogue_Y = 2;
     switch (choice) {
 		case 0: //ADD monitor
 		{
@@ -85,22 +171,20 @@ start:
 		    string addr = res.substr(0, firstSpace);
 		    int port = atoi(res.substr(firstSpace+1, res.find_first_of(' ', firstSpace+1)).c_str());
 		    int monitorID = atoi(res.substr(res.find_first_of(' ', firstSpace+1)+1).c_str());
-		    if (findDuplicate(monitorID, addr)) {
+		    if (findDuplicate(monitorID, addr, port)) {
 				addDialogue.hideDialogue();
-				Dialogue d("ERROR", "This monitor address or ID already exists!", 25, 10);
-				d.setWarningColor();
-				d.showDialogue();
+				Dialogue d("ERROR", "This monitor with same (address, port) pair or ID already exists!", 25, 10);
+				d.showDialogue(1, 1);
 				touchwin(stdscr);
 				refresh();
 				goto start;
 		    }    
 		    try {
-				m_controller->addMonitor(addr.c_str(), port, monitorID);
+		    	(m_controller->*m_addMonitor)(addr.c_str(), port, monitorID);
 			} catch (char const* s) {
 				addDialogue.hideDialogue();
 				Dialogue d("EXCEPTION", s, 25, 10);
-				d.setWarningColor();
-				d.showDialogue();
+				d.showDialogue(1, 1);
 				goto start;
 			}
 			m_monitors[monitorID] = std::make_pair(addr, port);
@@ -108,7 +192,7 @@ start:
 			
 			stringstream ss; ss << "Add monitor: " << monitorID; 
 			Dialogue dialS(ss.str().c_str(), "Monitor successfully added!", 25, 11);
-		    dialS.showDialogue();
+		    dialS.showDialogue(1, 0);
 		    
 		    touchwin(stdscr);
 		    refresh();
@@ -119,24 +203,31 @@ start:
 		case 1: //DELETE monitor
 		{
 		    m_MenuWindow->hideMenu();
-		    Dialogue dial("Delete monitor", 25, 10, m_monitors);
-		    int monitID = dial.showMonitorDialogue();
-		    if (m_monitors.find(monitID) != m_monitors.end()) {
-		    	m_monitors.erase(monitID);
-		    	try {
-		    		m_controller->deleteMonitor(monitID);
-		    	} catch ( char const* s) {
-		    		Dialogue dialE("ERROR", s, 25, 10);
-		    		dialE.setWarningColor();
-		    		dialE.showDialogue();
-		    		goto start;
-		    	}
-		    	stringstream ss; ss << "Delete monitor: " << monitID; 
-				Dialogue dialS(ss.str().c_str(), "Monitor successfully deleted!", 25, 11);
-		    	dialS.showDialogue();
-		    }
-		    dial.hideDialogue();
+		    Dialogue dial("Delete monitors (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
 		    
+		    dial.hideDialogue();
+				
+		    vector<string> monitorsDone;
+		    for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+		    {
+				if (m_monitors.find(it->first) != m_monitors.end()) {
+					m_monitors.erase(it->first);
+					try {
+						(m_controller->*m_deleteMonitor)(it->first);
+					} catch ( char const* s) {
+						Dialogue dialE("ERROR", s, 25, 10);
+						dialE.showDialogue(1, 1);
+						goto start;
+					}
+					stringstream ss; ss << "Monitor " << it->first << " successfully deleted!";
+					monitorsDone.push_back(ss.str());	
+				}
+		    }
+		    if (monitorsDone.size() > 0) {
+				Dialogue dialS("Delete monitors", monitorDialogue_X + 8, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
 		    touchwin(stdscr);
 		    refresh();
 			
@@ -146,24 +237,36 @@ start:
 		case 2: //CONNECT monitor
 		{
 		    m_MenuWindow->hideMenu();
-		    Dialogue dial("Connect monitor", 25, 10, m_monitors);
-		    int monitID = dial.showMonitorDialogue();
-		    bool res;
-		    if (m_monitors.find(monitID) != m_monitors.end()) {
-		    	try {
-		    		res = m_controller->connectMonitor(monitID);
-		    	} catch ( char const* s) {
-		    		Dialogue dialE("ERROR", s, 25, 10);
-		    		dialE.setWarningColor();
-		    		dialE.showDialogue();
-		    		goto start;
-		    	}
-		    }
+		    Dialogue dial("Connect monitor (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+		    
 		    dial.hideDialogue();
-		    stringstream ss; ss << "Connect monitor: " << monitID;
-		    Dialogue dialS(ss.str().c_str(), res ?
-		    			"Monitor successfully connected!" : "Monitor could not connect!", 25, 11);
-		    dialS.showDialogue();
+			
+			vector<string> monitorsDone;
+		    
+		    for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+		    {
+				if (m_monitors.find(it->first) != m_monitors.end()) {
+					try {
+						if (!(m_controller->*m_connectMonitor)(it->first)) {
+							stringstream ss; ss << "Monitor " << it->first << " could not connect!";
+							monitorsDone.push_back(ss.str());	
+						} else {
+							stringstream ss; ss << "Monitor " << it->first << " successfully connected!";
+							monitorsDone.push_back(ss.str());	
+						}
+					} catch ( char const* s) {
+						dial.hideDialogue();
+						Dialogue dialE("ERROR", s, 25, 10);
+						dialE.showDialogue(1, 1);
+						goto start;
+					}
+				}
+		    }
+		    if (monitorsDone.size() > 0) {
+				Dialogue dialS("Connect monitors", monitorDialogue_X + 8, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
 		    
 		    touchwin(stdscr);
 		    refresh();
@@ -173,22 +276,33 @@ start:
 		case 3: //DISCONNECT monitor
 		{
 		    m_MenuWindow->hideMenu();
-		    Dialogue dial("Disconnect monitor", 25, 10, m_monitors);
-		    int monitID = dial.showMonitorDialogue();
-		    if (m_monitors.find(monitID) != m_monitors.end()) {
-		    	try {
-		    		m_controller->disconnectMonitor(monitID);
-		    	} catch ( char const* s) {
-		    		Dialogue dialE("ERROR", s, 25, 10);
-		    		dialE.setWarningColor();
-		    		dialE.showDialogue();
-		    		goto start;
-		    	}
-		    }
+		    Dialogue dial("Disonnect monitors (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+		    
 		    dial.hideDialogue();
-		    stringstream ss; ss << "Disconnect monitor: " << monitID;
-		    Dialogue dialS(ss.str().c_str(), "Monitor successfully disconnected!", 25, 11);
-		    dialS.showDialogue();
+			
+			vector<string> monitorsDone;
+		    
+		    for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+		    {
+				if (m_monitors.find(it->first) != m_monitors.end()) {
+					try {
+						(m_controller->*m_disconnectMonitor)(it->first);
+						stringstream ss; ss << "Monitor " << it->first << " disconnected!";
+						monitorsDone.push_back(ss.str());
+					} catch ( char const* s) {
+						dial.hideDialogue();
+						Dialogue dialE("ERROR", s, 25, 10);
+						dialE.showDialogue(1, 1);
+						goto start;
+					}
+				}
+		    }
+		    if (monitorsDone.size() > 0) {
+				Dialogue dialS("Disconnect monitors", monitorDialogue_X + 8, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
+		    
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -199,16 +313,15 @@ start:
 		    m_MenuWindow->hideMenu();
 		    bool res;
 		    try {
-		    	res = m_controller->connectAll();
+		    	res = (m_controller->*m_connectAll)();
 		    } catch ( char const* s) {
 		    	Dialogue dialE("ERROR", s, 25, 10);
-		    	dialE.setWarningColor();
-		    	dialE.showDialogue();
+		    	dialE.showDialogue(1, 1);
 		    	goto start;
 		    }
 		    Dialogue dial("Connect all", res ?
 		    			"All monitors successfully connected!" : "Some of monitors could not connect!", 25, 11);
-		    dial.showDialogue();
+		    dial.showDialogue(1, 0);
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -218,15 +331,14 @@ start:
 		{
 		    m_MenuWindow->hideMenu();
 		    try {
-		    	m_controller->disconnectAll();
+		    	(m_controller->*m_disconnectAll)();
 		    } catch ( char const* s) {
 		    	Dialogue dialE("ERROR", s, 25, 10);
-		    	dialE.setWarningColor();
-		    	dialE.showDialogue();
+		    	dialE.showDialogue(1, 1);
 		    	goto start;
 		    }
 		    Dialogue dial("Disconnect all", "All monitors successfully disconnected!", 25, 11);
-		    dial.showDialogue();
+		    dial.showDialogue(1, 0);
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -234,24 +346,38 @@ start:
 		}
 		case 6: //IS CONNECTED
 		{
-		    m_MenuWindow->hideMenu();
-		    Dialogue dial("Is connected", 25, 10, m_monitors);
-		    int res = dial.showMonitorDialogue();
-		    bool b;
-		    if (m_monitors.find(res) != m_monitors.end()) {
-		    	try {
-		    		b = m_controller->isConnected(res);
-		    	} catch ( char const* s) {
-		    		Dialogue dialE("ERROR", s, 25, 10);
-		    		dialE.setWarningColor();
-		    		dialE.showDialogue();
-		    		goto start;
-		    	}
-		    	stringstream ss; ss << "Monitor: " << res;
-		    	Dialogue dialSucc(ss.str().c_str(), b ? "Monitor is connected!" : "Monitor is disconnected!", 25, 10);
-		    	dialSucc.showDialogue();
-		    }
+			m_MenuWindow->hideMenu();
+		    Dialogue dial("Is connected (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+		    
 		    dial.hideDialogue();
+			
+			vector<string> monitorsDone;
+		    
+		    for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+		    {
+				if (m_monitors.find(it->first) != m_monitors.end()) {
+					try {
+						if ((m_controller->*m_isConnected)(it->first)) {
+							stringstream ss; ss << "Monitor " << it->first << " is connected!";
+							monitorsDone.push_back(ss.str());	
+						} else {
+							stringstream ss; ss << "Monitor " << it->first << " is not connected!";
+							monitorsDone.push_back(ss.str());	
+						}
+					} catch ( char const* s) {
+						dial.hideDialogue();
+						Dialogue dialE("ERROR", s, 25, 10);
+						dialE.showDialogue(1, 1);
+						goto start;
+					}
+				}
+		    }
+		    if (monitorsDone.size() > 0) {
+				Dialogue dialS("Is connected", monitorDialogue_X + 8, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
+			
 		    touchwin(stdscr);
 		    refresh();
 		    goto start;
@@ -260,22 +386,364 @@ start:
 		case 7: //GET PARAM
 		{
 		    m_MenuWindow->hideMenu();
+		    //vyber parametru
+		    Dialogue chooseParam("Choose parameter", 25, 11, m_FunctionNames);
+		    int paramNum = chooseParam.showDialogue(0,0);
+		    chooseParam.hideDialogue();
+		    if (paramNum == -1) goto start;
+		    //vyber monitoru
+		    Dialogue dial("Choose monitor (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+		    dial.hideDialogue();
+		    if (monitDialResult.size() == 0) {
+				touchwin(stdscr);
+				refresh();
+				goto start;
+		    }
+		    
+		    vector<string> monitorsDone;
+		    
+		    int (CController::* getterFunction)(int);
+		    switch(paramNum) {
+		    	case 0: { getterFunction = m_GetBacklightFunc; 			break;}
+		    	case 1: { getterFunction = m_GetContrastFunc; 			break;}
+		    	case 2: { getterFunction = m_GetSharpnessFunc; 			break;}
+		    	case 3: { getterFunction = m_GetBrightnessFunc;			break;}
+		    	case 4: { getterFunction = m_GetHueFunc; 				break;}
+		    	case 5: { getterFunction = m_GetPalenessFunc; 			break;}
+		    	case 6: { getterFunction = m_GetColorTemperatureFunc; 	break;}
+		    	case 7: { getterFunction = m_GetGammaCorrectionFunc; 	break;}
+		    	case 8: { getterFunction = m_GetVolumeFunc; 			break;}
+		    }
+		    if (m_options[0].second) { //parallelism enabled
+		    	int thrCount = monitDialResult.size();
+		    	pthread_t * threads = new pthread_t[thrCount];
+		    	pthread_mutex_t printMtx;
+				pthread_mutex_t dialogueMtx;
+				pthread_mutex_init(&dialogueMtx, NULL);
+				pthread_mutex_init(&printMtx, NULL);
+				
+				pthread_attr_t threadAttr;
+				pthread_attr_init(&threadAttr);
+				pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
+				struct getterThrFuncAttr * attrArray[thrCount];
+
+				for (int i = 0; i < thrCount; i++)
+				{
+					attrArray[i] = new getterThrFuncAttr(this, getterFunction,
+														&monitorsDone,
+														&printMtx,
+														&dialogueMtx,
+														monitDialResult[i].first, paramNum);
+					
+					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::helperGetterThrFunc, attrArray[i]);
+				}		
+		
+				for (int i = 0; i < thrCount; i++) {
+					pthread_join(threads[i], NULL);
+				}
+				
+				for (int i = 0; i < thrCount; i++) delete attrArray[i];
+				pthread_mutex_destroy(&printMtx);
+				pthread_mutex_destroy(&dialogueMtx);
+				pthread_attr_destroy(&threadAttr);  
+				delete [] threads;
+		    } else { 
+				for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+				{
+					if (m_monitors.find(it->first) != m_monitors.end()) {
+						try {
+							if ( !(m_controller->*m_isConnected)(it->first) ) {
+								stringstream ss; ss << "Monitor " << it->first << " is not connected!";
+								monitorsDone.push_back(ss.str());
+								continue;
+							}
+							int result = (m_controller->*getterFunction)(it->first);
+							stringstream ss;
+							ss << m_FunctionNames[paramNum] << " of monitor "
+								<< it->first << " is " << result << '.';
+							monitorsDone.push_back(ss.str());
+						} catch ( char const* s) {
+							Dialogue dialE("ERROR", s, 25, 10);
+							dialE.showDialogue(1, 1);
+							goto start;
+						}
+					}
+				}
+			} //if (!parallel)
+			if (!m_errorFlag_parallel) {
+				Dialogue dialS("Get parameter", monitorDialogue_X, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
 		    touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 8: //SET PARAM
 		{
 		    m_MenuWindow->hideMenu();
+		    //vyber parametru
+		    Dialogue chooseParam("Choose parameter", 25, 11, m_FunctionNames);
+		    int paramNum = chooseParam.showDialogue(0,0);
+		    chooseParam.hideDialogue();
+		    if (paramNum == -1) goto start;
+		  
+		    //vyber hodnoty
+		    Dialogue getNumber("Enter parameter value!", "", 15, 10);
+		    int paramValue = getNumber.showGetNumberDialogue();
+		    getNumber.hideDialogue();
+		    if (paramValue == -1) goto start;
+		    
+		    //vyber monitoru
+		    Dialogue dial("Choose monitor (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+		    vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+		    dial.hideDialogue();
+		    if (monitDialResult.size() == 0) {
+				touchwin(stdscr);
+				refresh();
+				goto start;
+		    }
+		    
+		    vector<string> monitorsDone;
+		    
+		    void (CController::* setterFunction)(int, int);
+		    switch(paramNum) {
+		    	case 0: { setterFunction = m_SetBacklightFunc; 			break;}
+		    	case 1: { setterFunction = m_SetContrastFunc; 			break;}
+		    	case 2: { setterFunction = m_SetSharpnessFunc; 			break;}
+		    	case 3: { setterFunction = m_SetBrightnessFunc;			break;}
+		    	case 4: { setterFunction = m_SetHueFunc; 				break;}
+		    	case 5: { setterFunction = m_SetPalenessFunc; 			break;}
+		    	case 6: { setterFunction = m_SetColorTemperatureFunc; 	break;}
+		    	case 7: { setterFunction = m_SetGammaCorrectionFunc; 	break;}
+		    	case 8: { setterFunction = m_SetVolumeFunc; 			break;}
+		    }
+		    if (m_options[0].second) { //parallelism enabled
+		    	int thrCount = monitDialResult.size();
+		    	
+		    	pthread_t * threads = new pthread_t[thrCount];
+		    	pthread_mutex_t printMtx;
+				pthread_mutex_t dialogueMtx;
+				pthread_mutex_init(&dialogueMtx, NULL);
+				pthread_mutex_init(&printMtx, NULL);
+				
+				pthread_attr_t threadAttr;
+				pthread_attr_init(&threadAttr);
+				pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
+				struct setterThrFuncAttr * attrArray[thrCount];
+
+				for (int i = 0; i < thrCount; i++)
+				{
+					attrArray[i] = new setterThrFuncAttr(this, setterFunction,
+														&monitorsDone,
+														&printMtx,
+														&dialogueMtx,
+														monitDialResult[i].first,
+														paramNum, paramValue);
+					
+					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::helperSetterThrFunc, attrArray[i]);
+				}		
+		
+				for (int i = 0; i < thrCount; i++) {
+					pthread_join(threads[i], NULL);
+				}
+				
+				for (int i = 0; i < thrCount; i++) delete attrArray[i];
+				pthread_mutex_destroy(&printMtx);
+				pthread_mutex_destroy(&dialogueMtx);
+				pthread_attr_destroy(&threadAttr);  
+				delete [] threads;
+		    } else { 
+				for (vector<pair<int, bool>>::iterator it = monitDialResult.begin(); it != monitDialResult.end(); ++it)
+				{
+					if (m_monitors.find(it->first) != m_monitors.end()) {
+						try {
+							if ( !(m_controller->*m_isConnected)(it->first) ) {
+								stringstream ss; ss << "Monitor " << it->first << " is not connected!";
+								monitorsDone.push_back(ss.str());
+								continue;
+							}
+							(m_controller->*setterFunction)(it->first, paramValue);
+							stringstream ss;
+							ss << m_FunctionNames[paramNum] << " of monitor "
+								<< it->first << " successfully changed to " << paramValue << '.';
+							monitorsDone.push_back(ss.str());
+						} catch ( char const* s) {
+							dial.hideDialogue();
+							Dialogue dialE("ERROR", s, 25, 10);
+							dialE.showDialogue(1, 1);
+							goto start;
+						}
+					}
+				}
+		    }//if (!parallel)
+		    if (!m_errorFlag_parallel) {
+				Dialogue dialS("Set parameter", monitorDialogue_X, monitorDialogue_Y, monitorsDone);
+				dialS.showDialogue(1, 0);
+			}
 		    touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 9: //COMMAND
 		{
 		    m_MenuWindow->hideMenu();
-		    touchwin(stdscr);
+		   //vyber parametru
+		    Dialogue chooseCommand("Choose command", 25, 11, m_CommandNames);
+		    int commandNum = chooseCommand.showDialogue(0,0);
+		    chooseCommand.hideDialogue();
+		    if (commandNum == -1) goto start;
+		   	
+		   	switch(commandNum) {
+		   		case 0: {  //read power status
+		   			//vyber monitoru
+					Dialogue dial("Choose monitor (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+					vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+					dial.hideDialogue();
+					if (monitDialResult.size() == 0) {
+						touchwin(stdscr);
+						refresh();
+						goto start;
+					}
+					vector<string> monitorsDone;
+		    		for (vector<pair<int, bool>>::iterator it = monitDialResult.begin();
+							it != monitDialResult.end(); ++it)
+					{
+						if (m_monitors.find(it->first) != m_monitors.end()) {
+							try {
+								if ( !(m_controller->*m_isConnected)(it->first) ) {
+									stringstream ss; ss << "Monitor " << it->first << " is not connected!";
+									monitorsDone.push_back(ss.str());
+									continue;
+								}
+								int result = (m_controller->*m_PowerStatusReadFunc)(it->first);
+								stringstream ss;
+								ss << "Power status of monitor "
+									<< it->first << " is ";
+								switch(result) {
+									case 1: { ss << "ON"; break;}
+									case 2: { ss << "STAND-BY"; break;}
+									case 3: { ss << "SUSPEND"; break;}
+									case 4: { ss << "OFF"; break;}
+									default: { ss << "UNDEFINED"; break;}
+								} ss << '.';
+								monitorsDone.push_back(ss.str());
+							} catch ( char const* s) {
+								dial.hideDialogue();
+								Dialogue dialE("ERROR", s, 25, 10);
+								dialE.showDialogue(1, 1);
+								goto start;
+							}
+						}
+					}
+				
+					Dialogue dialS("Power status read", monitorDialogue_X, monitorDialogue_Y, monitorsDone);
+					dialS.showDialogue(1, 0);
+			
+		   			break;
+		   		}
+		   		case 1: { //change power status
+					//vyber hodnoty
+					Dialogue getNumber("Enter command value! (1=ON or 4=OFF)", "", 15, 10);
+					int paramValue = getNumber.showGetNumberDialogue();
+					getNumber.hideDialogue();
+					if (paramValue == -1) goto start;
+					if (paramValue != 1 && paramValue != 4) {
+						Dialogue invVal("ERROR", "Invalid power control value, possible: 1=ON or 4=OFF", 15, 10);
+						invVal.showDialogue(1, 1);
+						goto start;
+					}
+				
+					//vyber monitoru
+					Dialogue dial("Choose monitor (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
+					vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
+					dial.hideDialogue();
+					if (monitDialResult.size() == 0) {
+						touchwin(stdscr);
+						refresh();
+						goto start;
+					}
+				
+					vector<string> monitorsDone;
+					if (m_options[0].second) { //parallelism enabled
+						int thrCount = monitDialResult.size();
+						
+						pthread_t * threads = new pthread_t[thrCount];
+						pthread_mutex_t printMtx;
+						pthread_mutex_t dialogueMtx;
+						pthread_mutex_init(&printMtx, NULL);
+						pthread_mutex_init(&dialogueMtx, NULL);
+				
+						pthread_attr_t threadAttr;
+						pthread_attr_init(&threadAttr);
+						pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
+						struct powerControlThrFuncAttr * attrArray[thrCount];
+
+						for (int i = 0; i < thrCount; i++)
+						{
+							attrArray[i] = new powerControlThrFuncAttr(this,
+																		&monitorsDone,
+																		&printMtx,
+																		&dialogueMtx,
+																		monitDialResult[i].first,
+																		paramValue);
+					
+							pthread_create(&threads[i], NULL,
+								(void*(*)(void*))&Demo::helperPowerControlThrFunc, attrArray[i]);
+						}		
+		
+						for (int i = 0; i < thrCount; i++) {
+							pthread_join(threads[i], NULL);
+						}
+				
+						for (int i = 0; i < thrCount; i++) delete attrArray[i];
+						pthread_mutex_destroy(&printMtx);
+						pthread_mutex_destroy(&dialogueMtx);
+						pthread_attr_destroy(&threadAttr);  
+						delete [] threads;
+					} else { 
+						for (vector<pair<int, bool>>::iterator it = monitDialResult.begin();
+									it != monitDialResult.end(); ++it)
+						{
+							if (m_monitors.find(it->first) != m_monitors.end()) {
+								try {
+									if ( !(m_controller->*m_isConnected)(it->first) ) {
+										stringstream ss; ss << "Monitor " << it->first << " is not connected!";
+										monitorsDone.push_back(ss.str());
+										continue;
+									}
+									(m_controller->*m_PowerControlFunc)(it->first, paramValue);
+									stringstream ss;
+									ss << "Power status of monitor "
+										<< it->first << " successfully changed to ";
+										switch(paramValue) {
+										case 1: { ss << "ON"; break;}
+										case 4: { ss << "OFF"; break;}
+										default: { ss << "UNDEFINED"; break;}
+									} ss << '.';
+									monitorsDone.push_back(ss.str());
+								} catch ( char const* s) {
+									dial.hideDialogue();
+									Dialogue dialE("ERROR", s, 25, 10);
+									dialE.showDialogue(1, 1);
+									goto start;
+								}
+							}
+						}
+					}
+					if (!m_errorFlag_parallel) {
+						Dialogue dialS("Change power status", monitorDialogue_X, monitorDialogue_Y, monitorsDone);
+						dialS.showDialogue(1, 0);
+					}
+		   			break;
+		   		}
+		   	}
+		   	
+		   	touchwin(stdscr);
 		    refresh();
+		    goto start;
 		    break;
 		}
 		case 10: //OPTIONS
@@ -298,4 +766,110 @@ start:
     }
     touchwin(stdscr);
     refresh();
+}
+void * Demo::helperGetterThrFunc(struct getterThrFuncAttr * attr) {
+	attr->thisObj->GetterThrFunc(attr);
+	return NULL;
+}
+
+void Demo::GetterThrFunc (struct getterThrFuncAttr * attr) {
+
+	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
+		try {
+			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
+				pthread_mutex_lock(attr->printMtx);
+				attr->monitorsDone->push_back(ss.str());
+				pthread_mutex_unlock(attr->printMtx);
+				return;
+			}
+			int result = (m_controller->*(attr->getterFunc))(attr->monitorID);
+			stringstream ss;
+			ss << m_FunctionNames[attr->paramNum] << " of monitor "
+				<< attr->monitorID << " is " << result << '.';
+			pthread_mutex_lock(attr->printMtx);
+			attr->monitorsDone->push_back(ss.str());
+			pthread_mutex_unlock(attr->printMtx);
+		} catch ( char const* s) {
+			Dialogue dialE("ERROR", s, 25, 10);
+			
+			pthread_mutex_lock(attr->dialogueMtx);
+			dialE.showDialogue(1, 1);
+			pthread_mutex_unlock(attr->dialogueMtx);
+			return;
+		}
+	}
+	return;
+}
+void * Demo::helperSetterThrFunc(struct setterThrFuncAttr * attr) {
+	attr->thisObj->SetterThrFunc(attr);
+	return NULL;
+}
+
+void Demo::SetterThrFunc (struct setterThrFuncAttr * attr) {
+	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
+		try {
+			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
+				pthread_mutex_lock(attr->printMtx);
+				attr->monitorsDone->push_back(ss.str());
+				pthread_mutex_unlock(attr->printMtx);
+				return;
+			}
+			(m_controller->*(attr->setterFunc))(attr->monitorID, attr->paramValue);
+			stringstream ss;
+			ss << m_FunctionNames[attr->paramNum] << " of monitor "
+				<< attr->monitorID << " successfully changed to " << attr->paramValue << '.';
+			pthread_mutex_lock(attr->printMtx);
+			attr->monitorsDone->push_back(ss.str());
+			pthread_mutex_unlock(attr->printMtx);
+		} catch ( char const* s) {
+			Dialogue dialE("ERROR", s, 25, 10);
+			
+			pthread_mutex_lock(attr->dialogueMtx);
+			dialE.showDialogue(1, 1);
+			pthread_mutex_unlock(attr->dialogueMtx);
+			return;
+		}
+	}
+	return;
+}
+void * Demo::helperPowerControlThrFunc(struct powerControlThrFuncAttr * attr) {
+	attr->thisObj->PowerControlThrFunc(attr);
+	return NULL;
+}
+
+void Demo::PowerControlThrFunc (struct powerControlThrFuncAttr * attr) {
+	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
+		try {
+			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
+				pthread_mutex_lock(attr->printMtx);
+				attr->monitorsDone->push_back(ss.str());
+				pthread_mutex_unlock(attr->printMtx);
+				return;
+			}
+			(m_controller->*m_PowerControlFunc)(attr->monitorID, attr->paramValue);
+			stringstream ss;
+			ss << "Power status of monitor "
+				<< attr->monitorID << " successfully changed to ";
+				switch(attr->paramValue) {
+				case 1: { ss << "ON"; break;}
+				case 4: { ss << "OFF"; break;}
+				default: { ss << "UNDEFINED"; break;}
+			} ss << '.';
+			pthread_mutex_lock(attr->printMtx);
+			attr->monitorsDone->push_back(ss.str());
+			pthread_mutex_unlock(attr->printMtx);
+		} catch ( char const* s) {
+			Dialogue dialE("ERROR", s, 25, 10);
+			
+			pthread_mutex_lock(attr->dialogueMtx);
+			dialE.showDialogue(1, 1);
+			dialE.hideDialogue();
+			pthread_mutex_unlock(attr->dialogueMtx);
+			return;
+		}
+	}
+	return;
 }

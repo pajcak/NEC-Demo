@@ -1,0 +1,135 @@
+==13561== Helgrind, a thread error detector
+==13561== Copyright (C) 2007-2013, and GNU GPL'd, by OpenWorks LLP et al.
+==13561== Using Valgrind-3.10.0.SVN and LibVEX; rerun with -h for copyright info
+==13561== Command: ./demo
+==13561== 
+==13561== ---Thread-Announcement------------------------------------------
+==13561== 
+==13561== Thread #1 is the program's root thread
+==13561== 
+==13561== ---Thread-Announcement------------------------------------------
+==13561== 
+==13561== Thread #2 was created
+==13561==    at 0x5ABB43E: clone (clone.S:74)
+==13561==    by 0x5290199: do_clone.constprop.3 (createthread.c:75)
+==13561==    by 0x52918BA: pthread_create@@GLIBC_2.2.5 (createthread.c:245)
+==13561==    by 0x4C30C90: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x40659F: Demo::startMenu() (Demo.cpp:430)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during write of size 8 at 0xFFEFFFAD0 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AABC: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== This conflicts with a previous read of size 8 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A474: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during write of size 4 at 0xFFEFFFAD8 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AACB: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== This conflicts with a previous read of size 4 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A682: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:700)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during write of size 4 at 0xFFEFFFAE0 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AACF: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== This conflicts with a previous read of size 4 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A6E6: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:700)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during write of size 4 at 0xFFEFFFAF8 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AAF2: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== This conflicts with a previous read of size 4 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A6D2: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:700)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during read of size 4 at 0xFFEFFFAF8 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A723: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:703)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== This conflicts with a previous write of size 4 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AAF2: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during read of size 4 at 0xFFEFFFAFC by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A72D: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:702)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== This conflicts with a previous write of size 4 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AAFC: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== ----------------------------------------------------------------
+==13561== 
+==13561== Possible data race during read of size 4 at 0xFFEFFFAF0 by thread #2
+==13561== Locks held: none
+==13561==    at 0x40A7A9: Demo::GetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:704)
+==13561==    by 0x40A485: Demo::helperGetterThrFunc(Demo::getterThrFuncAttr*) (Demo.cpp:685)
+==13561==    by 0x4C30E26: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==13561==    by 0x5291181: start_thread (pthread_create.c:312)
+==13561==    by 0x5ABB47C: clone (clone.S:111)
+==13561== 
+==13561== This conflicts with a previous write of size 4 by thread #1
+==13561== Locks held: none
+==13561==    at 0x40AAE7: Demo::getterThrFuncAttr::getterThrFuncAttr(Demo*, int (CController::*)(int), std::vector<std::string, std::allocator<std::string> >*, pthread_mutex_t*, int, int) (Demo.h:24)
+==13561==    by 0x40656B: Demo::startMenu() (Demo.cpp:429)
+==13561==    by 0x413C4A: main (main.cpp:37)
+==13561== 
+==13561== 
+==13561== For counts of detected and suppressed errors, rerun with: -v
+==13561== Use --history-level=approx or =none to gain increased speed, at
+==13561== the cost of reduced accuracy of conflicting-access information
+==13561== ERROR SUMMARY: 10 errors from 7 contexts (suppressed: 24 from 24)
