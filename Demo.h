@@ -1,5 +1,4 @@
 #include "MenuWindow.h"
-#include "../NEC-Controller/headers/CController.h"
 #include <map>
 
 #ifndef Demo_H
@@ -14,10 +13,12 @@ public:
     void startMenu();
 private:
 	void initMonitors();
-	void initFunctions();
+	void initOptions();
+	void loadLibrary(const char * libName);
 	bool findDuplicate(int id, string adddr, int port) const;
 	
-	CController * m_controller;
+	void * m_Library;
+	
     MenuWindow * m_MenuWindow;
     map<string, void(*)> m_Parameters;
     map<int, pair<string, int>> m_monitors;
@@ -26,42 +27,39 @@ private:
     
 	//----THR-FUNCS----------------------
 	struct getterThrFuncAttr {
-		getterThrFuncAttr( Demo * d, int(CController::* f)(int),
+		getterThrFuncAttr( int( *f)(int),
 							vector<string> * monVect,
 							pthread_mutex_t * prMtx,
 							pthread_mutex_t * dialMtx,
 							int id, int param)
-		: thisObj(d), getterFunc(f),
+		: getterFunc(f),
 		monitorsDone(monVect),
 		printMtx(prMtx),
 		dialogueMtx(dialMtx),
 		monitorID(id), paramNum(param){}
 		
-		Demo * thisObj;
-		int (CController::* getterFunc) (int);
+		int ( *getterFunc) (int);
 		vector<string> * monitorsDone;
 		pthread_mutex_t * printMtx;
 		pthread_mutex_t * dialogueMtx;
 		int monitorID;
 		int paramNum;
 	};
-	static void * helperGetterThrFunc(struct getterThrFuncAttr * attr);
 	void GetterThrFunc (struct getterThrFuncAttr * attr);
 	//--------------------
 	struct setterThrFuncAttr {
-		setterThrFuncAttr( Demo * d, void(CController::* f)(int,int),
+		setterThrFuncAttr( void( *f)(int,int),
 							vector<string> * monVect,
 							pthread_mutex_t * prMtx,
 							pthread_mutex_t * dialMtx,
 							int id, int parNum, int parValue)
-		: thisObj(d), setterFunc(f),
+		: setterFunc(f),
 		monitorsDone(monVect),
 		printMtx(prMtx),
 		dialogueMtx(dialMtx),
 		monitorID(id), paramNum(parNum), paramValue(parValue){}
 		
-		Demo * thisObj;
-		void (CController::* setterFunc) (int, int);
+		void ( *setterFunc) (int, int);
 		vector<string> * monitorsDone;
 		pthread_mutex_t * printMtx;
 		pthread_mutex_t * dialogueMtx;
@@ -69,77 +67,72 @@ private:
 		int paramNum;
 		int paramValue;
 	};
-	static void * helperSetterThrFunc(struct setterThrFuncAttr * attr);
 	void SetterThrFunc (struct setterThrFuncAttr * attr);
 	//-----------------
 	struct powerControlThrFuncAttr {
-		powerControlThrFuncAttr( Demo * d,
-								vector<string> * monVect,
+		powerControlThrFuncAttr( vector<string> * monVect,
 								pthread_mutex_t * prMtx,
 								pthread_mutex_t * dialMtx,
 								int id, int val)
-		: thisObj(d),
-		monitorsDone(monVect),
+		: monitorsDone(monVect),
 		printMtx(prMtx),
 		dialogueMtx(dialMtx),
 		monitorID(id), paramValue(val) {}
 
-		Demo * thisObj;
 		vector<string> * monitorsDone;
 		pthread_mutex_t * printMtx;
 		pthread_mutex_t * dialogueMtx;
 		int monitorID;
 		int paramValue;
 	};
-	static void * helperPowerControlThrFunc(struct powerControlThrFuncAttr * attr);
 	void PowerControlThrFunc (struct powerControlThrFuncAttr * attr);
 	//----THR-FUNCS-END------------------
 	
 	//-------FUNCTIONS-------
-    void (CController::* m_initController   ) (); 
-    void (CController::* m_destroyController) (); 
-    void (CController::* m_addMonitor       ) (const char *, int, int);
-    void (CController::* m_deleteMonitor    ) (int);
-    bool (CController::* m_connectMonitor   ) (int);
-    void (CController::* m_disconnectMonitor) (int);
-    bool (CController::* m_connectAll       ) ();
-    void (CController::* m_disconnectAll    ) ();
-    bool (CController::* m_isConnected      ) (int);
+    void ( *m_initController   ) (); 
+    void ( *m_destroyController) (); 
+    void ( *m_addMonitor       ) (const char *, int, int);
+    void ( *m_deleteMonitor    ) (int);
+    bool ( *m_connectMonitor   ) (int);
+    void ( *m_disconnectMonitor) (int);
+    bool ( *m_connectAll       ) ();
+    void ( *m_disconnectAll    ) ();
+    bool ( *m_isConnected      ) (int);
     //-------PARAM-FUNCTIONS-------
     
     vector<string> m_FunctionNames;
     
-	int (CController::* m_GetBacklightFunc)(int);
-	void (CController::* m_SetBacklightFunc)(int, int);
+	int (*m_GetBacklightFunc)(int);
+	void (*m_SetBacklightFunc)(int, int);
 
-	int (CController::* m_GetContrastFunc)(int);
-	void (CController::* m_SetContrastFunc)(int, int);
+	int (*m_GetContrastFunc)(int);
+	void (*m_SetContrastFunc)(int, int);
 
-	int (CController::* m_GetSharpnessFunc)(int);
-	void (CController::* m_SetSharpnessFunc)(int, int);
+	int (*m_GetSharpnessFunc)(int);
+	void (* m_SetSharpnessFunc)(int, int);
 
-	int (CController::* m_GetBrightnessFunc)(int);
-	void (CController::* m_SetBrightnessFunc)(int, int);
+	int ( *m_GetBrightnessFunc)(int);
+	void ( *m_SetBrightnessFunc)(int, int);
 
-	int (CController::* m_GetHueFunc)(int);
-	void (CController::* m_SetHueFunc)(int, int);
+	int ( *m_GetHueFunc)(int);
+	void ( *m_SetHueFunc)(int, int);
 
-	int (CController::* m_GetPalenessFunc)(int);
-	void (CController::* m_SetPalenessFunc)(int, int);
+	int ( *m_GetPalenessFunc)(int);
+	void ( *m_SetPalenessFunc)(int, int);
 
-	int (CController::* m_GetColorTemperatureFunc)(int);
-	void (CController::* m_SetColorTemperatureFunc)(int, int);
+	int ( *m_GetColorTemperatureFunc)(int);
+	void ( *m_SetColorTemperatureFunc)(int, int);
 
-	int (CController::* m_GetGammaCorrectionFunc)(int);
-	void (CController::* m_SetGammaCorrectionFunc)(int, int);
+	int ( *m_GetGammaCorrectionFunc)(int);
+	void ( *m_SetGammaCorrectionFunc)(int, int);
 
-	int (CController::* m_GetVolumeFunc)(int);
-	void (CController::* m_SetVolumeFunc)(int, int);
+	int ( *m_GetVolumeFunc)(int);
+	void ( *m_SetVolumeFunc)(int, int);
     //-------COMMAND-FUNCTIONS-------
     vector<string> m_CommandNames;
     
-    int  (CController::* m_PowerStatusReadFunc)(int);
-    void (CController::* m_PowerControlFunc)(int, int);
+    int  ( *m_PowerStatusReadFunc)(int);
+    void ( *m_PowerControlFunc)(int, int);
 };
 
 #endif	/* Demo_H */

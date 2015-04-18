@@ -4,6 +4,7 @@
 #include <cstdio>
 #include "Demo.h"
 #include "Dialogue.h"
+#include <dlfcn.h>
 
 Demo::Demo()
 {
@@ -23,126 +24,181 @@ Demo::Demo()
     init_pair(6, COLOR_WHITE, COLOR_BLACK);
     init_pair(7, COLOR_YELLOW, COLOR_BLACK);
 	
-	
-	m_controller = new CController();
-	m_controller->initController();
+	loadLibrary("controller.so");
+	m_initController();
 	
 	initMonitors();
-	initFunctions();
-	m_options.push_back(std::make_pair("Paralelism enabled", false));
-			
-
+	initOptions();
+	
     m_MenuWindow = new MenuWindow();
     
 }
 
 Demo::~Demo()
 {
-	m_controller->destroyController();
-	delete m_controller;
+	m_destroyController();
+	
+	dlclose(m_Library);
+	
     delete m_MenuWindow;
     keypad(stdscr, FALSE);
     endwin();
 }
+
+void Demo::initOptions() {
+	m_options.push_back(std::make_pair("Paralelism enabled", false));
+}
 void Demo::initMonitors() {
-	m_controller->addMonitor("127.0.0.1", 12345, 666);
+	m_addMonitor("127.0.0.1", 12345, 666);
 	m_monitors[666] = std::make_pair("127.0.0.1", 12345);
-	m_controller->addMonitor("127.0.0.1", 12346, 777);
+	m_addMonitor("127.0.0.1", 12346, 777);
 	m_monitors[777] = std::make_pair("127.0.0.1", 12346);
-	m_controller->addMonitor("10.0.0.100", 7142, 1);
+	m_addMonitor("10.0.0.100", 7142, 1);
 	m_monitors[1] = std::make_pair("10.0.0.100", 7142);
-	m_controller->addMonitor("10.0.0.101", 7142, 2);
+	m_addMonitor("10.0.0.101", 7142, 2);
 	m_monitors[2] = std::make_pair("10.0.0.101", 7142);
-	m_controller->addMonitor("10.0.0.102", 7142, 3);
+	m_addMonitor("10.0.0.102", 7142, 3);
 	m_monitors[3] = std::make_pair("10.0.0.102", 7142);
-	m_controller->addMonitor("10.0.0.103", 7142, 4);
+	m_addMonitor("10.0.0.103", 7142, 4);
 	m_monitors[4] = std::make_pair("10.0.0.103", 7142);
-	m_controller->addMonitor("10.0.0.104", 7142, 5);
+	m_addMonitor("10.0.0.104", 7142, 5);
 	m_monitors[5] = std::make_pair("10.0.0.104", 7142);
-	m_controller->addMonitor("10.0.0.105", 7142, 6);
+	m_addMonitor("10.0.0.105", 7142, 6);
 	m_monitors[6] = std::make_pair("10.0.0.105", 7142);
-	m_controller->addMonitor("10.0.0.106", 7142, 7);
+	m_addMonitor("10.0.0.106", 7142, 7);
 	m_monitors[7] = std::make_pair("10.0.0.106", 7142);
-	m_controller->addMonitor("10.0.0.107", 7142, 8);
+	m_addMonitor("10.0.0.107", 7142, 8);
 	m_monitors[8] = std::make_pair("10.0.0.107", 7142);
-	m_controller->addMonitor("10.0.0.108", 7142, 9);
+	m_addMonitor("10.0.0.108", 7142, 9);
 	m_monitors[9] = std::make_pair("10.0.0.108", 7142);
-	m_controller->addMonitor("10.0.0.109", 7142, 10);
+	m_addMonitor("10.0.0.109", 7142, 10);
 	m_monitors[10] = std::make_pair("10.0.0.109", 7142);
-	m_controller->addMonitor("10.0.0.110", 7142, 11);
+	m_addMonitor("10.0.0.110", 7142, 11);
 	m_monitors[11] = std::make_pair("10.0.0.110", 7142);
-	m_controller->addMonitor("10.0.0.111", 7142, 12);
+	m_addMonitor("10.0.0.111", 7142, 12);
 	m_monitors[12] = std::make_pair("10.0.0.111", 7142);
-	m_controller->addMonitor("10.0.0.112", 7142, 13);
+	m_addMonitor("10.0.0.112", 7142, 13);
 	m_monitors[13] = std::make_pair("10.0.0.112", 7142);
-	m_controller->addMonitor("10.0.0.113", 7142, 14);
+	m_addMonitor("10.0.0.113", 7142, 14);
 	m_monitors[14] = std::make_pair("10.0.0.113", 7142);
-	m_controller->addMonitor("10.0.0.114", 7142, 15);
+	m_addMonitor("10.0.0.114", 7142, 15);
 	m_monitors[15] = std::make_pair("10.0.0.114", 7142);
-	m_controller->addMonitor("10.0.0.115", 7142, 16);
+	m_addMonitor("10.0.0.115", 7142, 16);
 	m_monitors[16] = std::make_pair("10.0.0.115", 7142);
-	m_controller->addMonitor("10.0.0.116", 7142, 17);
+	m_addMonitor("10.0.0.116", 7142, 17);
 	m_monitors[17] = std::make_pair("10.0.0.116", 7142);
-	m_controller->addMonitor("10.0.0.117", 7142, 18);
+	m_addMonitor("10.0.0.117", 7142, 18);
 	m_monitors[18] = std::make_pair("10.0.0.117", 7142);
-	m_controller->addMonitor("10.0.0.118", 7142, 19);
+	m_addMonitor("10.0.0.118", 7142, 19);
 	m_monitors[19] = std::make_pair("10.0.0.118", 7142);
-	m_controller->addMonitor("10.0.0.119", 7142, 20);
+	m_addMonitor("10.0.0.119", 7142, 20);
 	m_monitors[20] = std::make_pair("10.0.0.119", 7142);
 }
     
-void Demo::initFunctions() {
-	//----------functions-------
-    m_initController    =  &CController::initController;
-    m_destroyController =  &CController::destroyController;
-    m_addMonitor        =  &CController::addMonitor;
-    m_deleteMonitor     =  &CController::deleteMonitor;
-    m_connectMonitor    =  &CController::connectMonitor;
-    m_disconnectMonitor =  &CController::disconnectMonitor;
-    m_connectAll        =  &CController::connectAll;
-    m_disconnectAll     =  &CController::disconnectAll;
-    m_isConnected       =  &CController::isConnected;
-	//------param-functions-----
+void Demo::loadLibrary(const char * libName) {	
+	m_Library = dlopen ( libName, RTLD_NOW | RTLD_GLOBAL );
+   	if(m_Library  == NULL) fprintf(stderr, "%s\n", dlerror());
+//------------------------------------------------------------------
+	m_initController = ( void (*)()) dlsym ( m_Library, "initController" );
+   if ( !m_initController ) fprintf(stderr, "%s\n", dlerror());
+   
+	m_destroyController = ( void (*)()) dlsym ( m_Library, "destroyController" );
+   if ( !m_destroyController ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_addMonitor = ( void (*)(const char*, int, int)) dlsym ( m_Library, "addMonitor" );
+   if ( !m_addMonitor ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_deleteMonitor = ( void (*)(int)) dlsym ( m_Library, "deleteMonitor" );
+   if ( !m_deleteMonitor ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_connectMonitor = ( bool (*)(int)) dlsym ( m_Library, "connectMonitor" );
+   if ( !m_connectMonitor ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_disconnectMonitor = ( void (*)(int)) dlsym ( m_Library, "disconnectMonitor" );
+   if ( !m_disconnectMonitor ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_connectAll = ( bool (*)()) dlsym ( m_Library, "connectAll" );
+   if ( !m_connectAll ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_disconnectAll = ( void (*)()) dlsym ( m_Library, "disconnectAll" );
+   if ( !m_disconnectAll ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_isConnected = ( bool (*)(int)) dlsym ( m_Library, "isConnected" );
+   if ( !m_isConnected ) fprintf(stderr, "%s\n", dlerror());
+   
+   	//------param-functions-----
+	m_GetBacklightFunc = ( int (*)(int)) dlsym ( m_Library, "getBacklight" );
+   if ( !m_GetBacklightFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_SetBacklightFunc = ( void (*)(int, int)) dlsym ( m_Library, "setBacklight" );
+   if ( !m_SetBacklightFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetContrastFunc = ( int (*)(int)) dlsym ( m_Library, "getContrast" );
+   if ( !m_GetContrastFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetContrastFunc = ( void (*)(int, int)) dlsym ( m_Library, "setContrast" );
+   if ( !m_SetContrastFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetSharpnessFunc = ( int (*)(int)) dlsym ( m_Library, "getSharpness" );
+   if ( !m_GetSharpnessFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetSharpnessFunc = ( void (*)(int, int)) dlsym ( m_Library, "setSharpness" );
+   if ( !m_SetSharpnessFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetBrightnessFunc = ( int (*)(int)) dlsym ( m_Library, "getBrightness" );
+   if ( !m_GetBrightnessFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetBrightnessFunc = ( void (*)(int, int)) dlsym ( m_Library, "setBrightness" );
+   if ( !m_SetBrightnessFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_GetHueFunc = ( int (*)(int)) dlsym ( m_Library, "getHue" );
+   if ( !m_GetHueFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetHueFunc = ( void (*)(int, int)) dlsym ( m_Library, "setHue" );
+   if ( !m_SetHueFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetPalenessFunc = ( int (*)(int)) dlsym ( m_Library, "getPaleness" );
+   if ( !m_GetPalenessFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetPalenessFunc = ( void (*)(int, int)) dlsym ( m_Library, "setPaleness" );
+   if ( !m_SetPalenessFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetColorTemperatureFunc = ( int (*)(int)) dlsym ( m_Library, "getColorTemperature" );
+   if ( !m_GetColorTemperatureFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetColorTemperatureFunc = ( void (*)(int, int)) dlsym ( m_Library, "setColorTemperature" );
+   if ( !m_SetColorTemperatureFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetGammaCorrectionFunc = ( int (*)(int)) dlsym ( m_Library, "getGammaCorrection" );
+   if ( !m_GetGammaCorrectionFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetGammaCorrectionFunc = ( void (*)(int, int)) dlsym ( m_Library, "setGammaCorrection" );
+   if ( !m_SetGammaCorrectionFunc ) fprintf(stderr, "%s\n", dlerror());
+	
+	m_GetVolumeFunc = ( int (*)(int)) dlsym ( m_Library, "getVolume" );
+   if ( !m_GetVolumeFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_SetVolumeFunc = ( void (*)(int, int)) dlsym ( m_Library, "setVolume" );
+   if ( !m_SetVolumeFunc ) fprintf(stderr, "%s\n", dlerror());
+
+    //-------COMMAND-FUNCTIONS-------	
+	m_PowerStatusReadFunc = ( int (*)(int)) dlsym ( m_Library, "powerStatusRead" );
+   if ( !m_PowerStatusReadFunc ) fprintf(stderr, "%s\n", dlerror());
+
+	m_PowerControlFunc = ( void (*)(int, int)) dlsym ( m_Library, "powerControl" );
+   if ( !m_PowerControlFunc ) fprintf(stderr, "%s\n", dlerror());
+        
 	m_FunctionNames.push_back("Backlight");
-	m_GetBacklightFunc = &CController::getBacklight;
-	m_SetBacklightFunc = &CController::setBacklight;
-
 	m_FunctionNames.push_back("Contrast");
-	m_GetContrastFunc = &CController::getContrast;
-	m_SetContrastFunc = &CController::setContrast;
-
 	m_FunctionNames.push_back("Sharpness");
-	m_GetSharpnessFunc = &CController::getSharpness;
-	m_SetSharpnessFunc = &CController::setSharpness;
-
 	m_FunctionNames.push_back("Brightness");
-	m_GetBrightnessFunc = &CController::getBrightness;
-	m_SetBrightnessFunc = &CController::setBrightness;
-
 	m_FunctionNames.push_back("Hue");
-	m_GetHueFunc = &CController::getHue;
-	m_SetHueFunc = &CController::setHue;
-
 	m_FunctionNames.push_back("Paleness");
-	m_GetPalenessFunc = &CController::getPaleness;
-	m_SetPalenessFunc = &CController::setPaleness;
-
 	m_FunctionNames.push_back("Color temperature");
-	m_GetColorTemperatureFunc = &CController::getColorTemperature;
-	m_SetColorTemperatureFunc = &CController::setColorTemperature;
-
 	m_FunctionNames.push_back("Gamma correction");
-	m_GetGammaCorrectionFunc = &CController::getGammaCorrection;
-	m_SetGammaCorrectionFunc = &CController::setGammaCorrection;
-
 	m_FunctionNames.push_back("Volume");
-	m_GetVolumeFunc = &CController::getVolume;
-	m_SetVolumeFunc = &CController::setVolume;
-	//------command-functions-----
 	m_CommandNames.push_back("Read power status");
-    m_PowerStatusReadFunc = &CController::powerStatusRead;
 	m_CommandNames.push_back("Change power status");
-    m_PowerControlFunc = &CController::powerControl;
 }
 
 bool Demo::findDuplicate(int id, string addr, int port) const {
@@ -180,7 +236,7 @@ start:
 				goto start;
 		    }    
 		    try {
-		    	(m_controller->*m_addMonitor)(addr.c_str(), port, monitorID);
+		    	m_addMonitor(addr.c_str(), port, monitorID);
 			} catch (char const* s) {
 				addDialogue.hideDialogue();
 				Dialogue d("EXCEPTION", s, 25, 10);
@@ -214,7 +270,7 @@ start:
 				if (m_monitors.find(it->first) != m_monitors.end()) {
 					m_monitors.erase(it->first);
 					try {
-						(m_controller->*m_deleteMonitor)(it->first);
+						m_deleteMonitor(it->first);
 					} catch ( char const* s) {
 						Dialogue dialE("ERROR", s, 25, 10);
 						dialE.showDialogue(1, 1);
@@ -248,7 +304,7 @@ start:
 		    {
 				if (m_monitors.find(it->first) != m_monitors.end()) {
 					try {
-						if (!(m_controller->*m_connectMonitor)(it->first)) {
+						if (!m_connectMonitor(it->first)) {
 							stringstream ss; ss << "Monitor " << it->first << " could not connect!";
 							monitorsDone.push_back(ss.str());	
 						} else {
@@ -287,7 +343,7 @@ start:
 		    {
 				if (m_monitors.find(it->first) != m_monitors.end()) {
 					try {
-						(m_controller->*m_disconnectMonitor)(it->first);
+						m_disconnectMonitor(it->first);
 						stringstream ss; ss << "Monitor " << it->first << " disconnected!";
 						monitorsDone.push_back(ss.str());
 					} catch ( char const* s) {
@@ -313,7 +369,7 @@ start:
 		    m_MenuWindow->hideMenu();
 		    bool res;
 		    try {
-		    	res = (m_controller->*m_connectAll)();
+		    	res = m_connectAll();
 		    } catch ( char const* s) {
 		    	Dialogue dialE("ERROR", s, 25, 10);
 		    	dialE.showDialogue(1, 1);
@@ -331,7 +387,7 @@ start:
 		{
 		    m_MenuWindow->hideMenu();
 		    try {
-		    	(m_controller->*m_disconnectAll)();
+		    	m_disconnectAll();
 		    } catch ( char const* s) {
 		    	Dialogue dialE("ERROR", s, 25, 10);
 		    	dialE.showDialogue(1, 1);
@@ -358,7 +414,7 @@ start:
 		    {
 				if (m_monitors.find(it->first) != m_monitors.end()) {
 					try {
-						if ((m_controller->*m_isConnected)(it->first)) {
+						if (m_isConnected(it->first)) {
 							stringstream ss; ss << "Monitor " << it->first << " is connected!";
 							monitorsDone.push_back(ss.str());	
 						} else {
@@ -403,7 +459,7 @@ start:
 		    
 		    vector<string> monitorsDone;
 		    
-		    int (CController::* getterFunction)(int);
+		    int (* getterFunction)(int);
 		    switch(paramNum) {
 		    	case 0: { getterFunction = m_GetBacklightFunc; 			break;}
 		    	case 1: { getterFunction = m_GetContrastFunc; 			break;}
@@ -430,13 +486,13 @@ start:
 
 				for (int i = 0; i < thrCount; i++)
 				{
-					attrArray[i] = new getterThrFuncAttr(this, getterFunction,
+					attrArray[i] = new getterThrFuncAttr(getterFunction,
 														&monitorsDone,
 														&printMtx,
 														&dialogueMtx,
 														monitDialResult[i].first, paramNum);
 					
-					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::helperGetterThrFunc, attrArray[i]);
+					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::GetterThrFunc, attrArray[i]);
 				}		
 		
 				for (int i = 0; i < thrCount; i++) {
@@ -453,12 +509,12 @@ start:
 				{
 					if (m_monitors.find(it->first) != m_monitors.end()) {
 						try {
-							if ( !(m_controller->*m_isConnected)(it->first) ) {
+							if ( !m_isConnected(it->first) ) {
 								stringstream ss; ss << "Monitor " << it->first << " is not connected!";
 								monitorsDone.push_back(ss.str());
 								continue;
 							}
-							int result = (m_controller->*getterFunction)(it->first);
+							int result = getterFunction(it->first);
 							stringstream ss;
 							ss << m_FunctionNames[paramNum] << " of monitor "
 								<< it->first << " is " << result << '.';
@@ -507,7 +563,7 @@ start:
 		    
 		    vector<string> monitorsDone;
 		    
-		    void (CController::* setterFunction)(int, int);
+		    void (* setterFunction)(int, int);
 		    switch(paramNum) {
 		    	case 0: { setterFunction = m_SetBacklightFunc; 			break;}
 		    	case 1: { setterFunction = m_SetContrastFunc; 			break;}
@@ -535,14 +591,14 @@ start:
 
 				for (int i = 0; i < thrCount; i++)
 				{
-					attrArray[i] = new setterThrFuncAttr(this, setterFunction,
+					attrArray[i] = new setterThrFuncAttr(setterFunction,
 														&monitorsDone,
 														&printMtx,
 														&dialogueMtx,
 														monitDialResult[i].first,
 														paramNum, paramValue);
 					
-					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::helperSetterThrFunc, attrArray[i]);
+					pthread_create(&threads[i], NULL, (void*(*)(void*))&Demo::SetterThrFunc, attrArray[i]);
 				}		
 		
 				for (int i = 0; i < thrCount; i++) {
@@ -559,12 +615,12 @@ start:
 				{
 					if (m_monitors.find(it->first) != m_monitors.end()) {
 						try {
-							if ( !(m_controller->*m_isConnected)(it->first) ) {
+							if ( !m_isConnected(it->first) ) {
 								stringstream ss; ss << "Monitor " << it->first << " is not connected!";
 								monitorsDone.push_back(ss.str());
 								continue;
 							}
-							(m_controller->*setterFunction)(it->first, paramValue);
+							setterFunction(it->first, paramValue);
 							stringstream ss;
 							ss << m_FunctionNames[paramNum] << " of monitor "
 								<< it->first << " successfully changed to " << paramValue << '.';
@@ -613,12 +669,12 @@ start:
 					{
 						if (m_monitors.find(it->first) != m_monitors.end()) {
 							try {
-								if ( !(m_controller->*m_isConnected)(it->first) ) {
+								if ( !m_isConnected(it->first) ) {
 									stringstream ss; ss << "Monitor " << it->first << " is not connected!";
 									monitorsDone.push_back(ss.str());
 									continue;
 								}
-								int result = (m_controller->*m_PowerStatusReadFunc)(it->first);
+								int result = m_PowerStatusReadFunc(it->first);
 								stringstream ss;
 								ss << "Power status of monitor "
 									<< it->first << " is ";
@@ -683,7 +739,7 @@ start:
 
 						for (int i = 0; i < thrCount; i++)
 						{
-							attrArray[i] = new powerControlThrFuncAttr(this,
+							attrArray[i] = new powerControlThrFuncAttr(
 																		&monitorsDone,
 																		&printMtx,
 																		&dialogueMtx,
@@ -691,7 +747,7 @@ start:
 																		paramValue);
 					
 							pthread_create(&threads[i], NULL,
-								(void*(*)(void*))&Demo::helperPowerControlThrFunc, attrArray[i]);
+								(void*(*)(void*))&Demo::PowerControlThrFunc, attrArray[i]);
 						}		
 		
 						for (int i = 0; i < thrCount; i++) {
@@ -709,12 +765,12 @@ start:
 						{
 							if (m_monitors.find(it->first) != m_monitors.end()) {
 								try {
-									if ( !(m_controller->*m_isConnected)(it->first) ) {
+									if ( !m_isConnected(it->first) ) {
 										stringstream ss; ss << "Monitor " << it->first << " is not connected!";
 										monitorsDone.push_back(ss.str());
 										continue;
 									}
-									(m_controller->*m_PowerControlFunc)(it->first, paramValue);
+									m_PowerControlFunc(it->first, paramValue);
 									stringstream ss;
 									ss << "Power status of monitor "
 										<< it->first << " successfully changed to ";
@@ -734,7 +790,7 @@ start:
 						}
 					}
 					if (!m_errorFlag_parallel) {
-						Dialogue dialS("Change power status", monitorDialogue_X, monitorDialogue_Y, monitorsDone);
+						Dialogue dialS("Change power status", monitorDialogue_X-2, monitorDialogue_Y, monitorsDone);
 						dialS.showDialogue(1, 0);
 					}
 		   			break;
@@ -767,23 +823,19 @@ start:
     touchwin(stdscr);
     refresh();
 }
-void * Demo::helperGetterThrFunc(struct getterThrFuncAttr * attr) {
-	attr->thisObj->GetterThrFunc(attr);
-	return NULL;
-}
 
 void Demo::GetterThrFunc (struct getterThrFuncAttr * attr) {
 
 	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
 		try {
-			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+			if ( !m_isConnected(attr->monitorID) ) {
 				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
 				pthread_mutex_lock(attr->printMtx);
 				attr->monitorsDone->push_back(ss.str());
 				pthread_mutex_unlock(attr->printMtx);
 				return;
 			}
-			int result = (m_controller->*(attr->getterFunc))(attr->monitorID);
+			int result = (attr->getterFunc)(attr->monitorID);
 			stringstream ss;
 			ss << m_FunctionNames[attr->paramNum] << " of monitor "
 				<< attr->monitorID << " is " << result << '.';
@@ -795,28 +847,24 @@ void Demo::GetterThrFunc (struct getterThrFuncAttr * attr) {
 			
 			pthread_mutex_lock(attr->dialogueMtx);
 			dialE.showDialogue(1, 1);
+			dialE.hideDialogue();
 			pthread_mutex_unlock(attr->dialogueMtx);
 			return;
 		}
 	}
 	return;
 }
-void * Demo::helperSetterThrFunc(struct setterThrFuncAttr * attr) {
-	attr->thisObj->SetterThrFunc(attr);
-	return NULL;
-}
-
 void Demo::SetterThrFunc (struct setterThrFuncAttr * attr) {
 	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
 		try {
-			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+			if ( !m_isConnected(attr->monitorID) ) {
 				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
 				pthread_mutex_lock(attr->printMtx);
 				attr->monitorsDone->push_back(ss.str());
 				pthread_mutex_unlock(attr->printMtx);
 				return;
 			}
-			(m_controller->*(attr->setterFunc))(attr->monitorID, attr->paramValue);
+			attr->setterFunc(attr->monitorID, attr->paramValue);
 			stringstream ss;
 			ss << m_FunctionNames[attr->paramNum] << " of monitor "
 				<< attr->monitorID << " successfully changed to " << attr->paramValue << '.';
@@ -828,28 +876,25 @@ void Demo::SetterThrFunc (struct setterThrFuncAttr * attr) {
 			
 			pthread_mutex_lock(attr->dialogueMtx);
 			dialE.showDialogue(1, 1);
+			dialE.hideDialogue();
 			pthread_mutex_unlock(attr->dialogueMtx);
 			return;
 		}
 	}
 	return;
 }
-void * Demo::helperPowerControlThrFunc(struct powerControlThrFuncAttr * attr) {
-	attr->thisObj->PowerControlThrFunc(attr);
-	return NULL;
-}
 
 void Demo::PowerControlThrFunc (struct powerControlThrFuncAttr * attr) {
 	if (m_monitors.find(attr->monitorID) != m_monitors.end()) {
 		try {
-			if ( !(m_controller->*m_isConnected)(attr->monitorID) ) {
+			if ( !m_isConnected(attr->monitorID) ) {
 				stringstream ss; ss << "Monitor " << attr->monitorID << " is not connected!";
 				pthread_mutex_lock(attr->printMtx);
 				attr->monitorsDone->push_back(ss.str());
 				pthread_mutex_unlock(attr->printMtx);
 				return;
 			}
-			(m_controller->*m_PowerControlFunc)(attr->monitorID, attr->paramValue);
+			m_PowerControlFunc(attr->monitorID, attr->paramValue);
 			stringstream ss;
 			ss << "Power status of monitor "
 				<< attr->monitorID << " successfully changed to ";
