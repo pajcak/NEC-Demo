@@ -5,9 +5,23 @@
 #include "Demo.h"
 #include "Dialogue.h"
 #include <dlfcn.h>
-
+#include <unistd.h>
+#include <cstdio>
 Demo::Demo()
 {
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) {
+	    string libPath(cwd);
+		libPath.append("/controller.so");
+		loadLibrary(libPath.c_str());
+//		printf(">%s<\n", libPath.c_str());	
+	}
+    
+	m_initController();
+	
+	initMonitors();
+	initOptions();
+
     initscr();
     cbreak();
     noecho();
@@ -23,13 +37,7 @@ Demo::Demo()
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_WHITE, COLOR_BLACK);
     init_pair(7, COLOR_YELLOW, COLOR_BLACK);
-	
-	loadLibrary("controller.so");
-	m_initController();
-	
-	initMonitors();
-	initOptions();
-	
+		
     m_MenuWindow = new MenuWindow();
     
 }

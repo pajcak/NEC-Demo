@@ -5,11 +5,18 @@
 #include "Demo.h"
 #include "Dialogue.h"
 #include <dlfcn.h>
-
+#include <unistd.h>
+#include <cstdio>
 Demo::Demo()
 {
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) != NULL) {
+	    string libPath(cwd);
+		libPath.append("/controller.so");
+		loadLibrary(libPath.c_str());
+//		printf(">%s<\n", libPath.c_str());	
+	} else throw "Cannot locate library!";
     
-    loadLibrary("controller.so");
 	m_initController();
 	
 	initMonitors();
