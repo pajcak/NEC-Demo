@@ -13,8 +13,16 @@
 //#include "Controls.h"
 #include "Demo.h"
 #include "Dialogue.h"
+#include <signal.h>
 
 using namespace std;
+
+void signalHandler(int signalValue) {
+	endwin();
+	printf("Segmentation fault!\n");
+	exit(1);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -32,6 +40,8 @@ int main(int argc, char** argv)
 //    return 0;
 //    endwin();
     
+	signal(SIGSEGV, signalHandler);
+
     system("resize -s 30 80");
     Demo * demo = new Demo();
     demo->startMenu();
