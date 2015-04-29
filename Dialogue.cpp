@@ -126,8 +126,8 @@ int	Dialogue::showGetNumberDialogue() {
 	string buff;
     while (key != KEY_ENTER && key != '\n') {
     	key = wgetch(m_DialogueWindow);
-		if (key == 27) return -1;
-    	if ( !( (key >= '0' && key <= '9') || key == KEY_BACKSPACE) ) continue;
+    	if (key == 27) return -1;
+    	if ( !(key >= '0' && key <= '9') && key != KEY_BACKSPACE) continue;
     	
     	if (key == KEY_BACKSPACE) {
     		if (buff.length() > 0) {
@@ -136,6 +136,8 @@ int	Dialogue::showGetNumberDialogue() {
     		}
     		continue;
     	}
+		if ( lineX >= (m_Cols / 2) + (int)m_Title.length() / 2 ) continue;
+		
 		buff.push_back(key);
 		mvwaddch(m_DialogueWindow, lineY, lineX++, key);
 		wrefresh(m_DialogueWindow);
@@ -154,7 +156,7 @@ string Dialogue::showAddMonitorDialogue() {
     while (key != KEY_ENTER && key != '\n') {
     	key = wgetch(m_DialogueWindow);
 		if (key == 27) return "";
-    	if ( !( (key >= '0' && key <= '9') || key == '.' || key == ' ' || key == KEY_BACKSPACE) ) continue;
+    	if ( !(key >= '0' && key <= '9') && key != '.' && key != ' ' && key != KEY_BACKSPACE) continue;
     	
     	if (key == KEY_BACKSPACE) {
     		if (result.length() > 0) {
@@ -163,6 +165,7 @@ string Dialogue::showAddMonitorDialogue() {
     		}
     		continue;
     	}
+		if ( lineX > (m_Cols / 2) + (int)m_Title.length() / 2 + 5 ) continue;
 		result.push_back(key);
 		mvwaddch(m_DialogueWindow, lineY, lineX++, key);
 		wrefresh(m_DialogueWindow);
