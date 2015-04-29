@@ -58,10 +58,10 @@ void Demo::initOptions() {
 	m_options.push_back(std::make_pair("Paralelism enabled", false));
 }
 void Demo::initMonitors() {
-	m_addMonitor("127.0.0.1", 12345, 666);
-	m_monitors[666] = std::make_pair("127.0.0.1", 12345);
-	m_addMonitor("127.0.0.1", 12346, 777);
-	m_monitors[777] = std::make_pair("127.0.0.1", 12346);
+//	m_addMonitor("127.0.0.1", 12345, 666);
+//	m_monitors[666] = std::make_pair("127.0.0.1", 12345);
+//	m_addMonitor("127.0.0.1", 12346, 777);
+//	m_monitors[777] = std::make_pair("127.0.0.1", 12346);
 	m_addMonitor("10.0.0.100", 7142, 1);
 	m_monitors[1] = std::make_pair("10.0.0.100", 7142);
 	m_addMonitor("10.0.0.101", 7142, 2);
