@@ -98,8 +98,10 @@ vector<pair<int, bool>> Dialogue::showMonitorDialogue() {
             }
             else selected++;
         }
-        if (key == ' ') monitorsSelection[selected].second = !monitorsSelection[selected].second;
-
+        if (key == ' ') {
+        	if (monitorsSelection.size() < 1) return vector<pair<int, bool>>();
+        	monitorsSelection[selected].second = !monitorsSelection[selected].second;
+        }
         printUpdatedMonitorDialogue(selected, monitorsSelection);
         
 		if (selected >= scrollThreshold) {

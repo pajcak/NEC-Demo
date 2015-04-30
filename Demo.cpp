@@ -260,7 +260,6 @@ void Demo::deleteMonitorChoice() {
 	m_MenuWindow->hideMenu();
 	Dialogue dial("Delete monitors (SPACE to select)", monitorDialogue_X, monitorDialogue_Y, m_monitors);
 	vector<pair<int, bool>> monitDialResult = dial.showMonitorDialogue();
-	  
 	dial.hideDialogue();
 		
 	vector<string> monitorsDone;

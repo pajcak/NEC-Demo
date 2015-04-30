@@ -98,8 +98,10 @@ vector<pair<int, bool>> Dialogue::showMonitorDialogue() {
             }
             else selected++;
         }
-        if (key == ' ') monitorsSelection[selected].second = !monitorsSelection[selected].second;
-
+        if (key == ' ') {
+        	if (monitorsSelection.size() < 1) return vector<pair<int, bool>>()l
+        	monitorsSelection[selected].second = !monitorsSelection[selected].second;
+        }
         printUpdatedMonitorDialogue(selected, monitorsSelection);
         
 		if (selected >= scrollThreshold) {
@@ -151,7 +153,7 @@ string Dialogue::showAddMonitorDialogue() {
 	keypad(m_DialogueWindow, TRUE);
 	int key = 0;
 	int lineY = 3;
-	int lineX = (m_Cols / 2) - m_Title.length() / 2 - 5;
+	int lineX = (m_Cols / 2) - m_Title.length() / 2;
 	string result;
     while (key != KEY_ENTER && key != '\n') {
     	key = wgetch(m_DialogueWindow);
