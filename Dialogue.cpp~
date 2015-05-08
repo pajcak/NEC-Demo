@@ -99,7 +99,7 @@ vector<pair<int, bool>> Dialogue::showMonitorDialogue() {
             else selected++;
         }
         if (key == ' ') {
-        	if (monitorsSelection.size() < 1) return vector<pair<int, bool>>()l
+        	if (monitorsSelection.size() < 1) return vector<pair<int, bool>>();
         	monitorsSelection[selected].second = !monitorsSelection[selected].second;
         }
         printUpdatedMonitorDialogue(selected, monitorsSelection);

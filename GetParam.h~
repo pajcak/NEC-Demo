@@ -1,18 +1,18 @@
 #include <string>
 
 
-#ifndef AddMonitor_H
-#define	AddMonitor_H
+#ifndef GetParam_H
+#define	GetParam_H
 
-class AddMonitor {
+class GetParam {
 public:
-    AddMonitor();
-    virtual ~AddMonitor();
+    GetParam();
+    virtual ~GetParam();
     void showMenu(void);
 private:
     WINDOW * m_window;
-    static const std::string m_AddMonitorText []; 
+    static const std::string m_GetParamText []; 
 };
 
-#endif	/* AddMonitor_H */
+#endif	/* GetParam_H */
 

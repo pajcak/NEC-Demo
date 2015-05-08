@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -std=c++11 -Wall -pedantic -Wno-long-long -O0 -ggdb
-LDFLAGS=-L. -lcontroller -lncurses -lpthread -ldl
+LDFLAGS=-lncurses -lpthread -ldl
 
 SOURCES=$(wildcard *.cpp)
 

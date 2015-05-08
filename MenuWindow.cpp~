@@ -25,7 +25,7 @@ MenuWindow::MenuWindow()
     m_MenuStrings.push_back(pair<string, bool>("COMMAND", true));
     m_MenuStrings.push_back(pair<string, bool>("OPTIONS", true));
     m_MenuStrings.push_back(pair<string, bool>("EXIT", true));
-    m_MenuWindow = newwin(18, 22, LINES / 2 - 4, COLS / 2 - 10);
+    m_MenuWindow = newwin(18, 22, LINES / 2 - 5, COLS / 2 - 10);
     m_Window = newwin(LINES, COLS, 0, 0);
     box(m_MenuWindow, '|', '-');
     box(m_Window, '|', '-');

@@ -20,6 +20,7 @@ using namespace std;
 void signalHandler(int signalValue) {
 	endwin();
 	printf("Segmentation fault!\n");
+	exit(1);
 }
 
 

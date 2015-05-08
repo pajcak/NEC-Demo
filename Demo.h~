@@ -53,7 +53,6 @@ private:
     map<string, void(*)> m_Parameters;
     map<int, pair<string, int>> m_monitors;
     vector<pair<string,bool>> m_options;
-    bool m_errorFlag_parallel;
     
 	//----THR-FUNCS----------------------
 	struct getterThrFuncAttr {

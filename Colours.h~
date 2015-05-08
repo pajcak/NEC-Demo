@@ -1,4 +1,4 @@
-//    File: GetParam.h
+//    File: Colours.h
 //    Copyright (C) 2015  Patrik Faistaver
 //    
 //
@@ -12,21 +12,23 @@
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
 
-#include <string>
 
+#include <map>
+#include <iostream>
 
-#ifndef GetParam_H
-#define	GetParam_H
+#ifndef COLOURS_H
+#define	COLOURS_H
 
-class GetParam {
-public:
-    GetParam();
-    virtual ~GetParam();
-    void showMenu(void);
-private:
-    WINDOW * m_window;
-    static const std::string m_GetParamText []; 
+enum {
+    BLACK,
+    BLUE,
+    CYAN,
+    GREEN,
+    MAGENTA,
+    RED,
+    WHITE,
+    YELLOW
 };
 
-#endif	/* GetParam_H */
+#endif	/* COLOURS_H */
 

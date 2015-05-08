@@ -14,11 +14,13 @@ public:
     Dialogue(const string & title, const int & X, const int & Y, map<int, pair<string, int>> & monitors);
     Dialogue(const string & title, const string & text, const int & X, const int & Y);
     virtual ~Dialogue();
-    int showDialogue(bool isConstant, bool isWarning);
-    vector<pair<int, bool>> showMonitorDialogue();
-    string showAddMonitorDialogue();
-    vector<pair<string, bool> > * showOptionsDialogue();
-    void hideDialogue();
+    
+    int 							showDialogue(bool isConstant, bool isWarning);
+    vector<pair<int, bool>> 		showMonitorDialogue();
+    string 							showAddMonitorDialogue();
+    int 							showGetNumberDialogue();
+    vector<pair<string, bool> > * 	showOptionsDialogue();
+    void 							hideDialogue();
 private:
     void printUpdatedDialogue(const int & selected, bool isWarning);
     void printUpdatedOptionsDialogue(const int & selected, bool changeNeeded);
